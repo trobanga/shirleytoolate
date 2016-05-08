@@ -25,7 +25,7 @@ if __name__ == "__main__":
     parser_show.set_defaults(func=show)
 
     parser_create = subparser.add_parser("create", help="Create calendars, events, etc.")
-    parser_create.add_argument("--calendar", nargs=2, help="create a new calendar ")
+    parser_create.add_argument("--calendar", nargs=2, metavar=('URL_nick', 'calendar_name'), help="create a new calendar ")
 
 
     args = parser.parse_args()
