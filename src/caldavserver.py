@@ -18,5 +18,13 @@ class CalDAVserver():
         logging.debug('calendars: {}'.format(self.calendars))
 
     def create_calendar(self, name, cal_id):
-        cal_id = sanity_check.sanity_check(cal_id)
-        self.principal.make_calendar(name=name, cal_id=cal_id)
+        """
+        Create a new calendar on this server.
+        name: Displayname of calendar
+        cal_id:
+        """
+        cal_id = sanity_check.trailing_slash(cal_id)
+        try:
+            self.principal.make_calendar(name=name, cal_id=cal_id)
+        except Exception as e:
+            print(e)

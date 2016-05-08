@@ -16,13 +16,16 @@ if __name__ == "__main__":
     import sys
     import argparse
     parser = argparse.ArgumentParser('shirleytoolate')
-    parser.add_argument('--debug', '-d', action='store_true', help='more logging')
+    parser.add_argument('--debug', '-d', action='store_true', help='verbose logging')
 
     subparser = parser.add_subparsers()
-    parser_show = subparser.add_parser("show", help='show me your tits, Shirley!')
+    parser_show = subparser.add_parser("show", help='Show calendars, events, etc.')
     parser_show.add_argument("--events", nargs='+', help="show events")
     parser_show.add_argument("--url", action='store_true', help="show url of calendar")
     parser_show.set_defaults(func=show)
+
+    parser_create = subparser.add_parser("create", help="Create calendars, events, etc.")
+    parser_create.add_argument("--calendar", nargs=2, help="create a new calendar ")
 
 
     args = parser.parse_args()
@@ -34,13 +37,16 @@ if __name__ == "__main__":
         logging.basicConfig(filename='shirleys.log',level=logging.INFO)
 
 
-    config.url = {sanity_check.sanity_check(k): list(map(sanity_check.sanity_check, v)) for k,v in config.url.items()}
+    config.url = {k: (sanity_check.trailing_slash(v[0]),
+                    list(map(sanity_check.trailing_slash, v[1])))
+                    for k,v in config.url.items()}
 
     print(config.url)
     server = []
     for k, v in config.url.items():
-        for c in v:
-            server.append(caldavserver.CalDAVserver(k + c))
+        print("Server nick: {}".format(k))
+        for c in v[1]:
+            server.append(caldavserver.CalDAVserver(v[0] + c))
 
     for s in server:
         for c in s.calendars:
