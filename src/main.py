@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # cli = caldav.DAVClient('http://trobanga:wurst@localhost:5232/trobanga/cal/')
 # p = cli.principal()
@@ -44,15 +44,16 @@ if __name__ == "__main__":
 
     print(config.url)
     server = []
-    for k, v in config.url:
-            for c in v:
-            server = caldavserver.CalDAVserver(config.url)
+    for k, v in config.url.items():
+        for c in v:
+            server.append(caldavserver.CalDAVserver(k + c))
 
-    for c in server.calendars:
-        print(c.name)
+    for s in server:
+        for c in s.calendars:
+            print(c.name)
 
     # calendar.show(args)
 
 #    subargs = subparser.parse_args()
 
-    args.func(calendar, args)
+#    args.func(calendar, args)
