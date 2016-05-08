@@ -8,6 +8,12 @@ For testing purpose, create a calendar with radicale:
 import caldav
 cli = caldav.DAVClient('http://localhost:5232/trobanga/cal1/')
 p = cli.principal()
+p.make_calendar(name="test", cal_id="cal1/")
+
+# check if it was created
+p.calendars()
+
+# to add an event
 vcal = """BEGIN:VCALENDAR
 VERSION:2.0
 PRODID:-//Example Corp.//CalDAV Client//EN
@@ -20,6 +26,6 @@ SUMMARY:This is an event
 END:VEVENT
 END:VCALENDAR
 """
-p.make_calendar(name="test", cal_id="cal1/")
-p.calendars()
+c = p.calendars([0])
+c.add_event(vcal)
 ```
