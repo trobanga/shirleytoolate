@@ -6,7 +6,7 @@ The ultimate and nothing less than the bestest!
 For testing purpose, create a calendar with radicale:
 ```python
 import caldav
-cli = caldav.DAVClient('http://localhost:5232/trobanga/cal1/')
+cli = caldav.DAVClient('http://localhost:5232/trobanga/')
 p = cli.principal()
 p.make_calendar(name="test", cal_id="cal1/")
 
