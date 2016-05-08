@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/bin/env python3
 
 # cli = caldav.DAVClient('http://trobanga:wurst@localhost:5232/trobanga/cal/')
 # p = cli.principal()
