@@ -4,8 +4,20 @@ import config
 import logging
 import sanity_check
 import caldavserver
+import show_command
 
-server = {}
+
+#def show(c, args):
+#    if args.events:
+#        for e in c.events():
+#            show_command.event_print(e.data)
+#        #print(list(map(show_command.event_print,c.events() )))
+#
+#
+#
+#=======
+servers = {}
+calendars  = []
 
 def show(*args):
     """
@@ -14,12 +26,18 @@ def show(*args):
 
     args = vars(args[0])
 
-    if "calendars" in args:
-        for k,v in server.items():
+    if args["calendars"]:
+        for k,v in servers.items():
             print('Server nick: {}'.format(k))
             print("Calendars:")
             for cal in v.calendars:
                 print(cal)
+
+    elif args["events"]:
+        print("abc")
+        for c in calendars:
+            for e in c.events():
+                print( e)
 
 def create(*args):
     """
@@ -30,8 +48,8 @@ def create(*args):
         url_nick = args['calendar'][0]
         cal_name = args['calendar'][1]
         cal_id = args['calendar'][2]
-        if url_nick in server:
-            server[url_nick].create_calendar(cal_name, cal_id)
+        if url_nick in servers:
+            servers[url_nick].create_calendar(cal_name, cal_id)
         
 
         
@@ -66,7 +84,10 @@ if __name__ == "__main__":
     config.url = {k: sanity_check.trailing_slash(v) for k,v in config.url.items()}
 
     for k, v in config.url.items():
-        server[k] = caldavserver.CalDAVserver(v)
+        servers[k] = caldavserver.CalDAVserver(v)
+        for k,v in servers.items():
+            for c in v.calendars:
+                calendars.append(c)
 
             
     args.func(args)
