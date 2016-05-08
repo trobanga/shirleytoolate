@@ -26,5 +26,9 @@ class CalDAVserver():
         cal_id = sanity_check.trailing_slash(cal_id)
         try:
             self.principal.make_calendar(name=name, cal_id=cal_id)
+            logging.info("Created new calendar {}, {}".format(name, cal_id))
+            self.calendars = self.principal.calendars()
+            logging.debug('calendars: {}'.format(self.calendars))
         except Exception as e:
             print(e)
+            logging.info("Creation of new calendar {}, {} failed".format(name, cal_id))
