@@ -1,15 +1,9 @@
 #!/usr/bin/env python3
 
-# cli = caldav.DAVClient('http://trobanga:wurst@localhost:5232/trobanga/cal/')
-# p = cli.principal()
-# c = p.calendar()
-# e = c.add_event(vcal)
-
 import config
 import logging
 import sanity_check
 import caldavserver
-
 
 
 def show(c, args):
