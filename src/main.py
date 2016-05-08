@@ -4,11 +4,14 @@ import config
 import logging
 import sanity_check
 import caldavserver
+import show_command
 
 
 def show(c, args):
-    if args.events and args.events[0] == 'all':
-        c.show_events(args)
+    if args.events:
+        for e in c.events():
+            show_command.event_print(e.data)
+        #print(list(map(show_command.event_print,c.events() )))
 
 
 
@@ -42,12 +45,14 @@ if __name__ == "__main__":
         for c in v:
             server.append(caldavserver.CalDAVserver(k + c))
 
+    print(50*'-')
     for s in server:
         for c in s.calendars:
-            print(c.name)
+            #print(c.name)
+            args.func(c, args)
+            
 
     # calendar.show(args)
 
-#    subargs = subparser.parse_args()
+    #subargs = subparser.parse_args()
 
-#    args.func(calendar, args)
