@@ -9,15 +9,15 @@ import config
 import logging
 import sanity_check
 import caldavserver
-        
-    
+
+
 
 def show(c, args):
     if args.events and args.events[0] == 'all':
         c.show_events(args)
-    
 
-        
+
+
 if __name__ == "__main__":
     import sys
     import argparse
@@ -39,23 +39,20 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(filename='shirleys.log',level=logging.INFO)
 
-    
+
     config.url = {sanity_check.sanity_check(k): list(map(sanity_check.sanity_check, v)) for k,v in config.url.items()}
-        
+
     print(config.url)
-    
-    
-    server = caldavserver.CalDAVserver(config.url)
+    server = []
+    for k, v in config.url:
+            for c in v:
+            server = caldavserver.CalDAVserver(config.url)
 
     for c in server.calendars:
         print(c.name)
-    
+
     # calendar.show(args)
-    
+
 #    subargs = subparser.parse_args()
 
     args.func(calendar, args)
-
-
-
-    
