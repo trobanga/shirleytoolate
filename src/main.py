@@ -6,16 +6,6 @@ import sanity_check
 import caldavserver
 import show_command
 
-
-#def show(c, args):
-#    if args.events:
-#        for e in c.events():
-#            show_command.event_print(e.data)
-#        #print(list(map(show_command.event_print,c.events() )))
-#
-#
-#
-#=======
 servers = {}
 calendars  = []
 
@@ -39,7 +29,8 @@ def show(*args):
             for e in c.events():
                 print( e)
 
-def create(*args):
+                
+def add(*args):
     """
     Handler for create cmd option
     """
@@ -66,11 +57,11 @@ if __name__ == "__main__":
     parser_show.add_argument("--calendars", action='store_true', help="show calendars")
     parser_show.set_defaults(func=show)
 
-    parser_create = subparser.add_parser("create", help="Create calendars, events, etc.")
-    parser_create.add_argument("--calendar", nargs=3,
+    parser_add = subparser.add_parser("add", help="Add calendars, events, etc.")
+    parser_add.add_argument("--calendar", nargs=3,
                                metavar=('URL_nick', 'calendar_name', 'cal_id'),
-                               help="create a new calendar ")
-    parser_create.set_defaults(func=create)
+                               help="add a new calendar ")
+    parser_add.set_defaults(func=add)
 
     args = parser.parse_args()
 
@@ -89,5 +80,5 @@ if __name__ == "__main__":
             for c in v.calendars:
                 calendars.append(c)
 
-            
-    args.func(args)
+    if args:       
+        args.func(args)
