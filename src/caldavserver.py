@@ -98,4 +98,12 @@ class CalDAVserver():
         else:
             return []
 
-                
+
+    def get_all_events(self):
+        """
+        Returns iterator over all events on this server.
+        """
+        e = [v.events() for k, v in self.calendars.items()]
+        import itertools
+        e = itertools.chain(*e)
+        return e
