@@ -22,10 +22,12 @@ def show(*args):
             print("Calendars:")
             for cal in v.calendars:
                 print(cal)
-
     elif args["events"]:
-        for displayname, e in show_command.event_list(calendars):
-            show_command.event_print(displayname, e)
+        if args['events'][0] == 'all':
+            for k,v in servers.items():
+                for d in v.calendars:
+                    for e in v.get_events(d):
+                        show_command.event_print(e)
 
                 
 def add(*args):
@@ -96,9 +98,6 @@ if __name__ == "__main__":
     
     for k, v in config.url.items():
         servers[k] = caldavserver.CalDAVserver(k, v)
-        for k,v in servers.items():
-            for c in v.calendars:
-                calendars.append(c)
 
     if args:       
         args.func(args)
