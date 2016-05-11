@@ -97,7 +97,7 @@ if __name__ == "__main__":
 
     
     for k, v in config.url.items():
-        servers[k] = caldavserver.CalDAVserver(v)
+        servers[k] = caldavserver.CalDAVserver(k, v)
         for k,v in servers.items():
             for c in v.calendars:
                 calendars.append(c)

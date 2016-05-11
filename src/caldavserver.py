@@ -10,8 +10,9 @@ class CalDAVserver():
     """
     Interface to calendar server using caldav.
     """
-    def __init__(self, url):
+    def __init__(self, nick, url):
         self.url = url
+        self.url_nick = nick
         self.client = caldav.DAVClient(url)
         logging.debug('client: {}'.format(self.client))
         self.principal = self.client.principal()
@@ -44,9 +45,9 @@ class CalDAVserver():
             self.calendars = self.principal.calendars()
             logging.debug('calendars: {}'.format(self.calendars))
             self.calendar_IDs.append(cal_id)
+            logging.info("Added new calendar with ID {} to url {}.".format(cal_id, self.url))
         except Exception as e:
-            print(e)
-            logging.info("Creation of new calendar {}, {} failed".format(name, cal_id))
+            logging.debug(e)
 
 
 
@@ -59,8 +60,8 @@ class CalDAVserver():
             for c in self.calendars:
                 if c.get_properties([caldav.elements.dav.Href()])['{DAV:}href'].endswith(cal_id):
                     c.delete()
-                    logging.info("Deleted calendar with ID {}".format(cal_id))
+                    logging.info("Deleted calendar with ID {} from url {}".format(cal_id, self.url))
                     return
-            raise Exception("Calendar with ID {} does not exist.".format(cal_id))
+            raise Exception("Calendar with ID {} does not exist in url.".format(cal_id, self.url))
         except Exception as e:
-            print(e)
+            logging.debug(e)
