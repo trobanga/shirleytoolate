@@ -6,16 +6,6 @@ import sanity_check
 import caldavserver
 import show_command
 
-
-#def show(c, args):
-#    if args.events:
-#        for e in c.events():
-#            show_command.event_print(e.data)
-#        #print(list(map(show_command.event_print,c.events() )))
-#
-#
-#
-#=======
 servers = {}
 calendars  = []
 
@@ -37,7 +27,8 @@ def show(*args):
         for e in show_command.event_list(calendars):
             show_command.event_print(e)
 
-def create(*args):
+                
+def add(*args):
     """
     Handler for create cmd option
     """
@@ -48,7 +39,22 @@ def create(*args):
         cal_id = args['calendar'][2]
         if url_nick in servers:
             servers[url_nick].create_calendar(cal_name, cal_id)
-        
+        else:
+            raise Exception("URL nick not known")
+
+
+def delete(*args):
+    """
+    Handler to delete things.
+    """
+    args = vars(args[0])
+    if "calendar" in args:
+        url_nick = args['calendar'][0]
+        cal_id = args['calendar'][1]
+        if url_nick in servers:
+            servers[url_nick].delete_calendar(cal_id)
+        else:
+            raise Exception("URL nick not known")
 
         
 if __name__ == "__main__":
@@ -64,12 +70,18 @@ if __name__ == "__main__":
     parser_show.add_argument("--calendars", action='store_true', help="show calendars")
     parser_show.set_defaults(func=show)
 
-    parser_create = subparser.add_parser("create", help="Create calendars, events, etc.")
-    parser_create.add_argument("--calendar", nargs=3,
+    parser_add = subparser.add_parser("add", help="Add calendars, etc.")
+    parser_add.add_argument("--calendar", nargs=3,
                                metavar=('URL_nick', 'calendar_name', 'cal_id'),
-                               help="create a new calendar ")
-    parser_create.set_defaults(func=create)
+                               help="add a new calendar ")
+    parser_add.set_defaults(func=add)
 
+    parser_del = subparser.add_parser("del", help="Delete calendars, etc.")
+    parser_del.add_argument("--calendar", nargs=2,
+                            metavar=("URL nick, cal_id"),
+                            help="Delete calendar from URL.")
+    parser_del.set_defaults(func=delete)
+    
     args = parser.parse_args()
 
 
@@ -81,11 +93,12 @@ if __name__ == "__main__":
 
     config.url = {k: sanity_check.trailing_slash(v) for k,v in config.url.items()}
 
+    
     for k, v in config.url.items():
-        servers[k] = caldavserver.CalDAVserver(v)
+        servers[k] = caldavserver.CalDAVserver(k, v)
         for k,v in servers.items():
             for c in v.calendars:
                 calendars.append(c)
 
-            
-    args.func(args)
+    if args:       
+        args.func(args)
