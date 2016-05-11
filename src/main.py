@@ -34,10 +34,8 @@ def show(*args):
                 print(cal)
 
     elif args["events"]:
-        print("abc")
-        for c in calendars:
-            for e in c.events():
-                print( e)
+        for e in show_command.event_list(calendars):
+            show_command.event_print(e)
 
 def create(*args):
     """
