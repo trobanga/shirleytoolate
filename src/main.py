@@ -27,7 +27,7 @@ def show(*args):
             for k,v in servers.items():
                 for d in v.calendars:
                     for e in v.get_events(d):
-                        show_command.event_print(e)
+                        show_command.event_print(d,e)
 
                 
 def add(*args):
