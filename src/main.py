@@ -24,8 +24,8 @@ def show(*args):
                 print(cal)
 
     elif args["events"]:
-        for e in show_command.event_list(calendars):
-            show_command.event_print(e)
+        for displayname, e in show_command.event_list(calendars):
+            show_command.event_print(displayname, e)
 
                 
 def add(*args):
