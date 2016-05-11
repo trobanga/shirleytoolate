@@ -7,7 +7,7 @@ from icalendar import *
 def event_list(calendars, *conditions):
     e_list = []
     for c in calendars:
-        for e in c.events():
+        for e in c['calendar'].events():
             if all(conditions):
                 e_list.append(e)
     return e_list
