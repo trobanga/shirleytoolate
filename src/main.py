@@ -5,6 +5,7 @@ import logging
 import sanity_check
 import caldavserver
 import show_command
+import tui
 
 servers = {}
 calendars  = []
@@ -58,6 +59,14 @@ def delete(*args):
         else:
             raise Exception("URL nick not known")
 
+def start_tui(*args):
+    """
+    Starts the curses based terminal interface
+    """
+    args = vars(args[0])
+    tui.start_tui(args)
+
+
         
 if __name__ == "__main__":
     import sys
@@ -84,6 +93,9 @@ if __name__ == "__main__":
                             help="Delete calendar from URL.")
     parser_del.set_defaults(func=delete)
     
+    parser_del = subparser.add_parser("tui", help="Start textual user interface")
+    parser_del.set_defaults(func=start_tui)
+
     args = parser.parse_args()
 
 
