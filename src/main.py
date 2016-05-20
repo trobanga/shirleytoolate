@@ -14,7 +14,6 @@ def show(*args):
     """
     Handler for show cmd option.
     """
-
     args = vars(args[0])
 
     if args["calendars"]:
@@ -38,6 +37,11 @@ def show(*args):
                             show_command.event_print(d,e)
             except Exception as e:
                 print("Calendar server {} not known.".format(e))
+    elif args["url"]:
+        for k,v in servers.items():
+            print("{}: {}".format(k, v.url))
+
+
                 
 def add(*args):
     """
