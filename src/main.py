@@ -29,7 +29,15 @@ def show(*args):
                 for d in v.calendars:
                     for e in v.get_events(d):
                         show_command.event_print(d,e)
-
+        else:
+            try:
+                for a in args['events']:
+                    v = servers[a]
+                    for d in v.calendars:
+                        for e in v.get_events(d):
+                            show_command.event_print(d,e)
+            except Exception as e:
+                print("Calendar server {} not known.".format(e))
                 
 def add(*args):
     """
