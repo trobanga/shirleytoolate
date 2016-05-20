@@ -39,7 +39,6 @@ class CalDAVserver():
         name: Displayname of calendar
         cal_id: unique ID
         """
-
         if displayname in self.calendars:
             raise Exception("CalDAVserver.create_calendar: Calendar name {} already exists in url {}.".format(name, self.url))
 

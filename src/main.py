@@ -58,12 +58,11 @@ def add(*args):
             raise Exception("URL nick not known")
 
     elif args["event"]:
-        print(calendars)
-        print(args['event'][0])
-        if args['event'][0] in get_calendars():
-            print("start curse")
-            e = cursed.run()
-            print(e)
+        cal = args['event'][0]
+        for c, s in get_calendars():
+            
+            if cal in c:
+                cursed.run(cal, s)
 
             
 def delete(*args):
@@ -108,10 +107,9 @@ def get_urls(url_conf="url.conf"):
 
 def get_calendars():
     """
-    Returns a list of all available calendars.
+    Returns a list of all available calendars and their server.
     """
-    import itertools
-    return itertools.chain(*[c.calendars for c in servers.values()])
+    return [(list(c.calendars.keys()), c) for s,c in servers.items()]
 
 
 def init_servers(urls):
@@ -165,6 +163,6 @@ if __name__ == "__main__":
 
     
     servers = init_servers(get_urls())
-     
+       
     if args:       
         args.func(args)
