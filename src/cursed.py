@@ -25,8 +25,10 @@ class EventWidget(urwid.Filler):
     def on_save(self, button):
         raise urwid.ExitMainLoop()
         
-    # def mouse_event(self, size, event, button, col, row, focus):
-    #     print(size, event, button, col, row, focus)
+    def keypress(self, size, key):
+        if key == "esc":
+            raise urwid.ExitMainLoop()
+        super(EventWidget, self).keypress(size, key)
 
 
 def run():

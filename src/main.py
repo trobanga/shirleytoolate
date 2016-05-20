@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import config
 import logging
 import sanity_check
 import caldavserver
@@ -9,6 +8,7 @@ import tui
 
 servers = {}
 calendars  = []
+urls = {}
 
 def show(*args):
     """
@@ -79,10 +79,28 @@ def start_tui(*args):
     tui.start_tui(args)
 
 
-        
+def read_config():
+    u = {}
+    with open("url.conf", 'r') as f:
+        lines = f.readlines()
+        for i, l in enumerate(lines):
+            if l.strip()[0] != '#':
+                l = l.split(' ')
+                if len(l) != 2:
+                    continue
+                l[1] = sanity_check.trailing_slash(l[1].rstrip())
+                u[l[0]] = l[1]
+    return u
+                
+
+                
+                
 if __name__ == "__main__":
     import sys
     import argparse
+
+
+    
     parser = argparse.ArgumentParser('shirley (toolate)')
     parser.add_argument('--debug', '-d', action='store_true', help='verbose logging')
 
@@ -116,11 +134,9 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(filename='shirleys.log',level=logging.INFO)
 
-
-    config.url = {k: sanity_check.trailing_slash(v) for k,v in config.url.items()}
-
+    urls = read_config()
     
-    for k, v in config.url.items():
+    for k, v in urls.items():
         servers[k] = caldavserver.CalDAVserver(k, v)
 
     if args:       

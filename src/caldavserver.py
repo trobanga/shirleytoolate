@@ -3,7 +3,6 @@
 import sanity_check
 import caldav
 import logging
-import config
 
 
 class CalDAVserver():
