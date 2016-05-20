@@ -6,9 +6,9 @@ import caldavserver
 import show_command
 import tui
 
+import cursed
+
 servers = {}
-calendars  = []
-urls = {}
 
 def show(*args):
     """
@@ -48,7 +48,7 @@ def add(*args):
     Handler for create cmd option
     """
     args = vars(args[0])
-    if "calendar" in args:
+    if args["calendar"]:
         url_nick = args['calendar'][0]
         cal_name = args['calendar'][1]
         cal_id = args['calendar'][2]
@@ -57,13 +57,21 @@ def add(*args):
         else:
             raise Exception("URL nick not known")
 
+    elif args["event"]:
+        print(calendars)
+        print(args['event'][0])
+        if args['event'][0] in get_calendars():
+            print("start curse")
+            e = cursed.run()
+            print(e)
 
+            
 def delete(*args):
     """
     Handler to delete things.
     """
     args = vars(args[0])
-    if "calendar" in args:
+    if args["calendar"]:
         url_nick = args['calendar'][0]
         cal_id = args['calendar'][1]
         if url_nick in servers:
@@ -71,6 +79,7 @@ def delete(*args):
         else:
             raise Exception("URL nick not known")
 
+        
 def start_tui(*args):
     """
     Starts the curses based terminal interface
@@ -79,9 +88,12 @@ def start_tui(*args):
     tui.start_tui(args)
 
 
-def read_config():
+def get_urls(url_conf="url.conf"):
+    """
+    Return dictionary with url_nick & url listed in url_conf
+    """
     u = {}
-    with open("url.conf", 'r') as f:
+    with open(url_conf, 'r') as f:
         lines = f.readlines()
         for i, l in enumerate(lines):
             if l.strip()[0] != '#':
@@ -93,7 +105,21 @@ def read_config():
     return u
                 
 
-                
+
+def get_calendars():
+    """
+    Returns a list of all available calendars.
+    """
+    import itertools
+    return itertools.chain(*[c.calendars for c in servers.values()])
+
+
+def init_servers(urls):
+    """
+    Initializes and returns servers given in url (dictionary with url_nick & url).
+    """
+    return {k: caldavserver.CalDAVserver(k, v) for k, v in urls.items()}
+
                 
 if __name__ == "__main__":
     import sys
@@ -115,6 +141,9 @@ if __name__ == "__main__":
     parser_add.add_argument("--calendar", nargs=3,
                                metavar=('URL_nick', 'calendar_name', 'cal_id'),
                                help="add a new calendar ")
+    parser_add.add_argument("--event", nargs=1,
+                            metavar=("calendar_name"),
+                            help="add a new event to calendar")
     parser_add.set_defaults(func=add)
 
     parser_del = subparser.add_parser("del", help="Delete calendars, etc.")
@@ -134,10 +163,8 @@ if __name__ == "__main__":
     else:
         logging.basicConfig(filename='shirleys.log',level=logging.INFO)
 
-    urls = read_config()
     
-    for k, v in urls.items():
-        servers[k] = caldavserver.CalDAVserver(k, v)
-
+    servers = init_servers(get_urls())
+     
     if args:       
         args.func(args)
