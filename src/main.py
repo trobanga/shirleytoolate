@@ -122,8 +122,6 @@ def init_servers(urls):
 if __name__ == "__main__":
     import sys
     import argparse
-
-
     
     parser = argparse.ArgumentParser('shirley (toolate)')
     parser.add_argument('--debug', '-d', action='store_true', help='verbose logging')
@@ -150,8 +148,8 @@ if __name__ == "__main__":
                             help="Delete calendar from URL.")
     parser_del.set_defaults(func=delete)
     
-    parser_del = subparser.add_parser("curses", help="Start textual user interface")
-    parser_del.set_defaults(func=start_tui)
+    parser_curse = subparser.add_parser("curses", help="Start textual user interface")
+    parser_curse.set_defaults(func=start_tui)
 
     args = parser.parse_args()
 
